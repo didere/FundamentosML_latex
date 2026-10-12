@@ -1918,12 +1918,11 @@ RPG        & 43.1 & 84.3 & 61.3 & 49.7 & 33.4 \\
 {\footnotesize Int.\ = \texttt{Intensidad\_Accion}; Hist.\ = \texttt{Complejidad\_Historia}; Estr.\ = \texttt{Necesidad\_Estrategia}; Hab.\ = \texttt{Habilidad\_Requerida}; Comp.\ = \texttt{Competitividad}.}
 \end{table}
 
-% INSERTAR IMAGEN: Captura de las primeras filas del archivo Dataset_Videojuegos_ML.xlsx o Entrenamiento_v.xlsx, mostrando los cinco atributos y la columna Genero_Videojuego.
-% \begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.85\textwidth]{captura_dataset.png}
-%    \caption{Muestra del dataset de videojuegos.}
-% \end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{./media/captura_dataset.png}
+  \caption{Muestra del dataset de videojuegos.}
+\end{figure}
 
 % ============================================================
 %  4. METODOLOGÍA
@@ -2005,12 +2004,17 @@ for i, caso in prueba.iterrows():
 \end{lstlisting}
 
 % INSERTAR IMAGEN: Captura de la salida del script KNN_Manual_videojuegos.py en consola (valor de N, valor de K y resumen final de aciertos).
-% \begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.85\textwidth]{captura_knn_python.png}
-%    \caption{Salida del script de KNN.}
-% \end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{./media/captura_knn_python.png}
+  \caption{Salida del script de KNN.}
+\end{figure}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{./media/captura_knn_python_1.png}
+  \caption{Salida del script de KNN.}
+\end{figure}
 \subsubsection{Cálculos realizados en Excel}
 
 El archivo \texttt{KNN\_videojuegos.xlsx} reproduce paso a paso el algoritmo con fórmulas de Excel, aplicando la misma regla para $K$ que el script de Python. Sus hojas son:
@@ -2025,18 +2029,18 @@ El archivo \texttt{KNN\_videojuegos.xlsx} reproduce paso a paso el algoritmo con
 En ninguno de los 20 casos hubo empate de votos: el menor número de votos obtenido por la clase ganadora fue 6 de 8.
 
 % INSERTAR IMAGEN: Captura de la hoja «Prueba» de KNN_videojuegos.xlsx, donde se observan N, K, aciertos, precisión, votos por género, predicción y columna «¿Acertó?».
-% \begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.95\textwidth]{captura_knn_excel_prueba.png}
-%    \caption{Hoja «Prueba» del cálculo manual de KNN.}
-% \end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{./media/captura_knn_excel_prueba.png}
+  \caption{Hoja «Prueba» del cálculo manual de KNN.}
+\end{figure}
 
 % INSERTAR IMAGEN: Captura de las hojas «Distancias» y «Ordenado» de KNN_videojuegos.xlsx, mostrando las distancias calculadas y los K vecinos sombreados para un caso de prueba.
-% \begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.95\textwidth]{captura_knn_excel_ordenado.png}
-%    \caption{Distancias y vecinos más cercanos en Excel.}
-% \end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{./media/captura_knn_excel_ordenado.png}
+  \caption{Distancias y vecinos más cercanos en Excel.}
+\end{figure}
 
 % ============================================================
 %  6. IMPLEMENTACIÓN DE REGRESIÓN LOGÍSTICA
@@ -2105,11 +2109,11 @@ Acción     & $-60.7067$ & $0.7767$  & $0.1117$  & $-0.3693$ & $0.3449$  & $-0.2
 En cada modelo, el mayor coeficiente positivo corresponde al atributo que caracteriza al género: \texttt{Competitividad} en Deportes, \texttt{Necesidad\_Estrategia} en Estrategia, \texttt{Complejidad\_Historia} en RPG e \texttt{Intensidad\_Accion} en Acción.
 
 % INSERTAR IMAGEN: Captura de la salida del script Regresionlogicamulticlase_videojuegos.py en consola (intercepto, coeficientes, probabilidades y tabla final con aciertos).
-% \begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.85\textwidth]{captura_rl_python.png}
-%    \caption{Salida del script de Regresión Logística.}
-% \end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{./media/captura_rl_python.png}
+  \caption{Salida del script de Regresión Logística.}
+\end{figure}
 
 \subsubsection{Cálculos realizados en Excel}
 
@@ -2129,11 +2133,11 @@ En las celdas superiores de la hoja se cuentan los aciertos (\texttt{COUNTIF}) y
 La normalización de la hoja difiere de las probabilidades individuales del script de Python (que son una sigmoide por modelo), pero ambas crecen de forma monótona con $z$, por lo que el género con mayor puntuación es el mismo en los dos enfoques.
 
 % INSERTAR IMAGEN: Captura de la hoja «Regresión logística» de Actividad_ML_videojuegos.xlsx, mostrando la tabla de coeficientes (parte superior) y el bloque de cálculo de un caso de prueba (z, e^z, probabilidad, predicción).
-% \begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.95\textwidth]{captura_rl_excel.png}
-%    \caption{Cálculo manual de Regresión Logística en Excel.}
-% \end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{./media/captura_rl_excel.png}
+  \caption{Cálculo manual de Regresión Logística en Excel.}
+\end{figure}
 
 % ============================================================
 %  7. RESULTADOS
