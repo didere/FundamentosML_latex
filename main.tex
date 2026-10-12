@@ -2048,13 +2048,13 @@ RPG        & 25  & 23 & 2 \\
 
 \subsubsection{Perfil promedio por género}
 
-La Tabla~\ref{tab:medias} presenta el promedio de cada atributo por género en el conjunto de entrenamiento. Cada género destaca en un atributo distinto: Acción en \texttt{Intensidad\_Accion}, Estrategia en \texttt{Necesidad\_Estrategia}, RPG en \texttt{Complejidad\_Historia} y Deportes en \texttt{Competitividad}. Acción y Deportes comparten valores altos de \texttt{Habilidad\_Requerida}.
+La Tabla~\ref{tab:medias1} presenta el promedio de cada atributo por género en el conjunto de entrenamiento. Cada género destaca en un atributo distinto: Acción en \texttt{Intensidad\_Accion}, Estrategia en \texttt{Necesidad\_Estrategia}, RPG en \texttt{Complejidad\_Historia} y Deportes en \texttt{Competitividad}. Acción y Deportes comparten valores altos de \texttt{Habilidad\_Requerida}.
 
 \begin{table}[H]
 \centering
 \small
 \caption{Promedio de los atributos por género (conjunto de entrenamiento, $n=80$)}
-\label{tab:medias}
+\label{tab:medias1}
 \begin{tabular}{l c c c c c}
 \toprule
 \textbf{Género} & \textbf{Int.} & \textbf{Hist.} & \textbf{Estr.} & \textbf{Hab.} & \textbf{Comp.} \\
@@ -2422,13 +2422,13 @@ Regresión Logística  & 18 & 20 & 0.90 (90\,\%) \\
 
 En el conjunto de prueba, KNN obtuvo una exactitud de 100\,\% (20 de 20) y la Regresión Logística de 90\,\% (18 de 20), es decir, una diferencia de dos casos. Ambos modelos acertaron todos los casos de Acción, Estrategia y RPG; la diferencia se concentra por completo en el género Deportes, donde KNN acertó 6 de 6 y la Regresión Logística 4 de 6.
 
-La Tabla~\ref{tab:medias} muestra el promedio de cada atributo por género en los datos de entrenamiento. Deportes y Acción tienen valores altos de \texttt{Habilidad\_Requerida} (85.0 y 77.7), lo que podría dificultar que una frontera lineal separe ambos géneros. Esta es una interpretación de los promedios, no una prueba: no se evaluaron otras fronteras ni otras variables.
+La Tabla~\ref{tab:medias2} muestra el promedio de cada atributo por género en los datos de entrenamiento. Deportes y Acción tienen valores altos de \texttt{Habilidad\_Requerida} (85.0 y 77.7), lo que podría dificultar que una frontera lineal separe ambos géneros. Esta es una interpretación de los promedios, no una prueba: no se evaluaron otras fronteras ni otras variables.
 
 \begin{table}[H]
 \centering
 \small
 \caption{Promedio de cada atributo por género en los datos de entrenamiento}
-\label{tab:medias}
+\label{tab:medias2}
 \begin{tabular}{l c c c c c}
 \toprule
 \textbf{Género} & \textbf{Intensidad} & \textbf{Complejidad} & \textbf{Estrategia} & \textbf{Habilidad} & \textbf{Competitividad} \\
