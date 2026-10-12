@@ -257,6 +257,8 @@ utilizar? \hyperref[quuxe9-tuxe9cnica-conviene-utilizar]{20}}
 
 \hyperref[doc2]{Documentación del codigo de regresión logistica}
 
+\hyperref[doc3]{Documentación del código de regresión logística multiclase (One-vs-Rest)}
+
 \newpage
 \section{INVESTIGACIÓN DE OUTLIERS ,CUARTILES, PUNTUACIÓN Z,
 ESTANDARIZAR Y
@@ -1758,6 +1760,156 @@ El código evalúa cuatro nuevos casos de estudio (4.5, 5, 6 y 7 horas) utilizan
 \subsubsection*{Resultados entregados por el código}
 Como podemos apreciar el que estudio 4.5 horas por una probabilidad muy pequeña no aprobo el examen los que estudiaron 5 horas en adelante si lo hicieron con una tasa de éxito diferente. El que mas probabilidades tuvo de aprobar fue el que estudio 7 horas por lo que esta sería la estrategia que tendrías que tomar si quieres asegurarte de aprobar.
 \newpage
+
+\newpage
+\section{Documentación del código de regresión logística multiclase (One-vs-Rest)}\label{doc3}
+
+\subsection{1. Documentación del archivo Excel: Actividad\_ML\_10\_6\_2026\_completo.xlsx}
+
+Tras analizar la estructura del documento Excel, se observa que funciona como el respaldo matemático y de cálculo manual de los modelos de regresión logística que se ejecutan en el código.
+
+\subsubsection*{Estructura y contenido principal del archivo}
+
+\begin{itemize}
+\item \textbf{Mapeo de clases:} El archivo define la equivalencia de 4 clases de vehículos que está intentando predecir el modelo. En las columnas de la derecha se establece la relación: la Clase 1 corresponde a SUV, la Clase 2 a Sedán, la Clase 3 a Deportivo y la Clase 4 a Camioneta.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{./media/image6.jpg}
+  \caption{Mapeo de clases en el archivo Excel de la regresión logística.}
+\end{figure}
+
+\begin{itemize}
+\item \textbf{Parámetros del modelo (coeficientes):} Las columnas principales estructuran la ecuación de la regresión logística. La columna b0 representa el intercepto o sesgo del modelo de cada clase. Las columnas de b1 a b5 representan los coeficientes o pesos asignados a cada uno de los 5 atributos que usa el código: \texttt{velocidad\_max}, \texttt{aceleracion}, \texttt{capacidad\_carga}, \texttt{eficiencia\_combustible} y \texttt{seguridad}.
+\item \textbf{Cálculos de probabilidad manuales:} Las columnas sin nombre muestran, paso a paso, la aplicación de la función sigmoide: el cálculo de la variable lineal $Z$, el cálculo exponencial y la probabilidad final.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{./media/image7.jpg}
+  \caption{Parámetros del modelo y cálculos de probabilidad en Excel.}
+\end{figure}
+
+Las fórmulas empleadas en el archivo son:
+
+\[ Z = b_0 + b_1 X_1 + b_2 X_2 + b_3 X_3 + b_4 X_4 + b_5 X_5 \]
+
+El exponencial se calcula como $e^{-Z}$, y la probabilidad usando la función sigmoide como:
+
+\[ P = \frac{1}{1 + e^{-Z}} \]
+
+Este archivo sirve para auditar los resultados que arroja Python, comprobando que las matemáticas subyacentes de las probabilidades de predicción sean correctas.
+
+\subsection{2. Documentación del código Python paso a paso}
+
+El código implementa una técnica de clasificación multiclase conocida como One-vs-Rest (OvR) o Uno contra Todos, utilizando Regresión Logística. Dado que la regresión logística tradicional es binaria, es decir, solo predice entre 2 resultados, este código entrena varios modelos para manejar múltiples clases.
+
+\subsubsection*{Paso 1: Importación de librerías}
+
+Se utiliza \texttt{pandas} para el manejo, lectura y manipulación de los datos en forma de DataFrames o tablas. También se importa \texttt{LogisticRegression} desde la librería scikit-learn. Este es el algoritmo matemático que calculará la probabilidad de que un vehículo pertenezca a una clase específica en función de sus características.
+
+\begin{lstlisting}
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+\end{lstlisting}
+
+\subsubsection*{Paso 2: Carga de datos y definición de variables}
+
+Se lee el archivo base \texttt{Entrenamiento.csv}, que contiene los datos históricos de los vehículos. Se usa la codificación \texttt{utf-8-sig} para evitar problemas con caracteres especiales como acentos. Luego, se define la lista \texttt{atributos}, que son las variables independientes $X$ que el modelo usará para aprender a diferenciar los autos.
+
+\begin{lstlisting}
+df = pd.read_csv("Entrenamiento.csv", encoding="utf-8-sig")
+
+atributos = ["velocidad_max", "aceleracion", "capacidad_carga",
+             "eficiencia_combustible", "seguridad"]
+\end{lstlisting}
+
+\subsubsection*{Paso 3: Identificación de clases y preparación del diccionario de modelos}
+
+Se extraen todas las categorías únicas de la columna \texttt{Clase}. Se usa \texttt{str.strip()} para limpiar cualquier espacio en blanco accidental en el texto y \texttt{unique()} para no repetir nombres. Posteriormente, se crean dos diccionarios vacíos: \texttt{sub\_dataframes}, para guardar tablas de datos transformadas, y \texttt{modelos}, para guardar un modelo entrenado por cada clase.
+
+\begin{lstlisting}
+clases_unicas = df["Clase"].str.strip().unique()
+
+sub_dataframes, modelos = {}, {}
+\end{lstlisting}
+
+\subsubsection*{Paso 4: Entrenamiento Uno contra Todos (bucle iterativo)}
+
+Aquí radica el núcleo de la estrategia. El código recorre cada clase, por ejemplo, SUV. Primero, copia los datos originales. Luego, realiza una binarización, reemplazando la columna \texttt{Clase} actual: si el auto es un SUV, le asigna el valor \texttt{si}; si es cualquier otra cosa, como Sedán o Camioneta, le asigna el valor \texttt{no}. Después, realiza la separación de variables, donde $X$ almacena los números de los atributos y la variable $y$ se convierte a 1 si es la clase actual y 0 si es el resto. Finalmente, ocurre el entrenamiento, inicializando un modelo con \texttt{max\_iter=1000}, es decir, hasta 1000 iteraciones para encontrar la fórmula matemática sin fallar. Se guarda este modelo específico en el diccionario y el proceso se repite hasta tener un modelo por cada tipo de vehículo.
+
+\begin{lstlisting}
+for clase in clases_unicas:
+    sub_df = df.copy()
+    sub_df["Clase"] = sub_df["Clase"].apply(
+        lambda x: "si" if str(x).strip() == clase else "no")
+    sub_dataframes[clase] = sub_df
+
+    X = sub_df[atributos].values
+    y = (sub_df["Clase"] == "si").astype(int).values  # si=1, no=0
+
+    modelo = LogisticRegression(max_iter=1000)
+    modelo.fit(X, y)
+    modelos[clase] = modelo
+\end{lstlisting}
+
+\subsubsection*{Paso 5: Creación de datos nuevos para inferencia (predicción)}
+
+Se crea un nuevo DataFrame con 4 vehículos desconocidos y sus respectivas características métricas de velocidad, aceleración, carga, entre otras. El objetivo es predecir qué tipo de vehículo es cada uno de ellos.
+
+\begin{lstlisting}
+nuevos = pd.DataFrame(
+    [
+        [95, 90, 15, 35, 65],
+        [60, 50, 85, 55, 90],
+        [72, 62, 40, 80, 78],
+        [50, 40, 95, 45, 82],
+    ],
+    columns=atributos,
+)
+\end{lstlisting}
+
+\subsubsection*{Paso 6: Cálculo de probabilidades combinadas}
+
+Mediante la función \texttt{predict\_proba}, por cada modelo entrenado, se le pide que evalúe a los 4 nuevos vehículos, lo cual devuelve la probabilidad. Se arma una tabla llamada \texttt{probabilidades}. Si hay 4 clases, esta tabla tendrá 4 columnas correspondientes a la probabilidad de ser SUV, probabilidad de ser Sedán, etc. Usando \texttt{idxmax(axis=1)}, se busca en cada fila cuál columna tuvo el porcentaje de probabilidad más alto. La clase ganadora se asigna a una nueva columna llamada \texttt{Clase\_predicha} para esos vehículos nuevos.
+
+\begin{lstlisting}
+probabilidades = pd.DataFrame(
+    {c: m.predict_proba(nuevos.values)[:, 1] for c, m in modelos.items()}
+)
+nuevos["Clase_predicha"] = probabilidades.idxmax(axis=1)
+\end{lstlisting}
+
+\subsubsection*{Paso 7: Despliegue de resultados matemáticos en pantalla}
+
+Este bucle final imprime de forma estética los parámetros internos del modelo, que deberían coincidir con los valores b0 a b5 vistos en el Excel. Imprime el intercepto, luego empareja los nombres de los atributos con sus respectivos coeficientes y los imprime. Finalmente, imprime para cada vehículo las probabilidades crudas: $P(no)$, que es la probabilidad de que pertenezca al resto, y $P(si)$, que es la probabilidad de que sea de la clase específica evaluada.
+
+\begin{lstlisting}
+for clase, modelo in modelos.items():
+    # predict_proba devuelve dos columnas: [P(no), P(si)]
+    proba = modelo.predict_proba(nuevos[atributos].values)
+
+    print("=" * 50)
+    print(f"SUB-DATAFRAME: {clase} vs. resto")
+    print("=" * 50)
+    print("Intercepto:", modelo.intercept_[0])
+    print("Coeficientes:")
+    for nombre, coef in zip(atributos, modelo.coef_[0]):
+        print(f"  {nombre}: {coef:.4f}")
+    print("Probabilidades por vehículo nuevo:")
+    for i, (p_no, p_si) in enumerate(proba):
+        print(f"  Vehículo {i}: P(no) = {p_no:.4f} | P(si) = {p_si:.4f}")
+    print()
+\end{lstlisting}
+
+\subsection{3. Resumen general del proceso}
+
+El proceso inicia abordando un problema de clasificación donde se tienen datos de vehículos clasificados en múltiples categorías y se quiere usar Regresión Logística para predecir la categoría de autos nuevos. El reto principal es que la Regresión Logística clásica solo puede decidir entre dos opciones y no entre cuatro.
+
+Para solucionarlo se emplea la estrategia One-vs-Rest: se entrena un modelo que responde si un vehículo pertenece a una clase específica o no, y se repite para todas las categorías. La base matemática está respaldada por el archivo Excel, donde cada modelo calcula un peso para cada atributo, como velocidad o carga.
+
+Finalmente, en la etapa de predicción, cuando llegan vehículos nuevos, se evalúan por todos los modelos. Cada modelo emite un porcentaje de probabilidad y el vehículo se etiqueta con la clase cuyo modelo arrojó el valor más alto.
 % ============================================================
 %  SECCIÓN PRINCIPAL
 % ============================================================
